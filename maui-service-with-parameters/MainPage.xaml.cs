@@ -13,7 +13,7 @@ namespace maui_service_with_parameters
             _counterService = counterService;
         }
 
-        internal static void OnServiceInitialize(object? service, ConstructorParametersRequiredEventArgs e)
+        internal static void OnServiceConstructing(object? service, ConstructorParametersRequiredEventArgs e)
         {
             if (service is CounterService counterService)
             {
@@ -52,13 +52,15 @@ namespace maui_service_with_parameters
     {
         private int _count;
 
-        public CounterService(EventHandler<ConstructorParametersRequiredEventArgs> onInit)
+        // Request initialization parameters in C'TOR.
+        // This allows initialization of properties and fields that are readonly, get only, and init
+        public CounterService(EventHandler<ConstructorParametersRequiredEventArgs>? onConstructing = null)
         {
             var e = new ConstructorParametersRequiredEventArgs
             {
                 { nameof(_count), default}
             };
-            onInit?.Invoke(this, e);
+            onConstructing?.Invoke(this, e);
             foreach (var key in e.Keys)
             {
                 switch (key)
