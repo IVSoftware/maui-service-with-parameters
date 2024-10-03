@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35312.102
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "maui-service-with-parameters", "maui-service-with-parameters\maui-service-with-parameters.csproj", "{300E829E-1F30-4DAB-BDF7-2826FF6B682C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{300E829E-1F30-4DAB-BDF7-2826FF6B682C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{300E829E-1F30-4DAB-BDF7-2826FF6B682C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{300E829E-1F30-4DAB-BDF7-2826FF6B682C}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{300E829E-1F30-4DAB-BDF7-2826FF6B682C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{300E829E-1F30-4DAB-BDF7-2826FF6B682C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{300E829E-1F30-4DAB-BDF7-2826FF6B682C}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {83DFCA78-5BA7-4DBF-9F39-9D635F3F7D2E}
+	EndGlobalSection
+EndGlobal
