@@ -1,18 +1,36 @@
-﻿namespace maui_service_with_parameters
+﻿
+using System.Collections;
+using static System.Collections.Generic.Dictionary<string, object?>;
+
+namespace maui_service_with_parameters
 {
     public partial class MainPage : ContentPage
     {
-        private readonly ICounterService _counterService;
-
-        public MainPage(ICounterService counterService)
+        private readonly Lazy<ICounterService> _counterService;
+        public MainPage(Lazy<ICounterService> counterService)
         {
             InitializeComponent();
             _counterService = counterService;
         }
 
+        internal static void OnServiceInitialize(object? service, ConstructorParametersRequiredEventArgs e)
+        {
+            if (service is CounterService counterService)
+            {
+                foreach(var key in e.Keys)
+                {
+                    switch (key)
+                    {
+                        case "_count":  // This needs to be "one less" than the first click value we want to see.
+                            e[key] = 4;
+                            break;
+                    }
+                }
+            }
+        }
         private void OnCounterClicked(object sender, EventArgs e)
         {
-            int count = _counterService.IncrementCount();
+            int count = _counterService.Value.IncrementCount();
 
             if (count == 1)
                 CounterBtn.Text = $"Clicked {count} time";
@@ -23,7 +41,8 @@
         }
     }
 
-    public interface ICounterService
+    public interface ILazyService { }
+    public interface ICounterService : ILazyService
     {
         int IncrementCount();
         int GetCount();
@@ -33,20 +52,66 @@
     {
         private int _count;
 
-        public CounterService(int initialCount = 0)
+        public CounterService(EventHandler<ConstructorParametersRequiredEventArgs> onInit)
         {
-            _count = initialCount;
+            var e = new ConstructorParametersRequiredEventArgs
+            {
+                { nameof(_count), default}
+            };
+            onInit?.Invoke(this, e);
+            foreach (var key in e.Keys)
+            {
+                switch (key)
+                {
+                    case "_count":
+                        e.TryGetValue<int>(key, out _count);
+                        break;
+                }
+            }
         }
-
         public int IncrementCount()
         {
             _count++;
             return _count;
         }
-
         public int GetCount()
         {
             return _count;
+        }
+    }
+    public class ConstructorParametersRequiredEventArgs : EventArgs, IEnumerable<KeyValuePair<string, object?>>
+    {
+        private Dictionary<string, object?> _parameters = new ();
+
+        public void Add(string key, object? value)
+        {
+            _parameters.Add(key, value);
+        }
+
+        public IEnumerator<KeyValuePair<string, object?>> GetEnumerator()
+        {
+            return _parameters.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+        public string[] Keys => _parameters.Keys.ToArray();
+        public object? this[string key]
+        {
+            get => _parameters[key];
+            set => _parameters[key] = value;
+        }
+        public bool TryGetValue<T>(string key, out T? value)
+        {
+            if (_parameters.TryGetValue(key, out var o) && o is T foundT)
+            {
+                value = foundT;
+                return true;
+            }
+            value = default;
+            return false;
         }
     }
 }
